@@ -1,21 +1,19 @@
-## what
+## Description
+<!--- Describe your changes in detail -->
 
-<!--
-- Describe high-level what changed as a result of these commits (i.e. in plain-english, what do these changes mean?)
-- Use bullet points to be concise and to the point.
--->
+## Motivation and Context
+<!--- Why is this change required? What problem does it solve? -->
+<!--- If it fixes an open issue, please link to the issue here. -->
 
-## why
+## Breaking Changes
+<!-- Does this break backwards compatibility with the current major version? -->
+<!-- If so, please provide an explanation why it is necessary. -->
 
-<!--
-- Provide the justifications for the changes (e.g. business case). 
-- Describe why these changes were made (e.g. why do these commits fix the problem?)
-- Use bullet points to be concise and to the point.
--->
-
-## references
-
-<!--
-- Link to any supporting github issues or helpful documentation to add some context (e.g. stackoverflow). 
-- Use `closes #123`, if this PR closes a GitHub issue `#123`
--->
+## How Has This Been Tested?
+- [ ] I have updated at least one of the `examples/*` to demonstrate and validate my change(s)
+- [ ] I have tested and validated these changes using one or more of the provided `examples/*` projects
+<!--- Users should start with an existing example as its written, deploy it, then check their changes against it -->
+<!--- This will highlight breaking/disruptive changes. Once you have checked, deploy your changes to verify -->
+<!--- Please describe how you tested your changes -->
+- [ ] I have executed `pre-commit run -a` on my pull request
+<!--- Please see https://github.com/antonbabenko/pre-commit-terraform#how-to-install for how to install -->
