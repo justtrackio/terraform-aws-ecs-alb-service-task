@@ -462,8 +462,13 @@ variable "ecs_service_enabled" {
   default     = true
 }
 
-variable "ecs_service_label_order" {
-  type        = list(string)
-  default     = null
-  description = "Overrides the `labels_order` for `aws_ecs_service` resources to modify ID elements appear in the `id`"
+variable "label_order_custom" {
+  type = object({
+    task        = optional(list(string)),
+    service     = optional(list(string)),
+    exec        = optional(list(string)),
+    ecs_service = optional(list(string))
+  })
+  default     = {}
+  description = "Overrides the `labels_order` for the different labels to modify ID elements appear in the `id`"
 }
