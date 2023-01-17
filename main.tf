@@ -514,7 +514,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
 
   cluster        = var.ecs_cluster_arn
   propagate_tags = var.propagate_tags
-  tags           = var.use_old_arn ? null : module.this.tags
+  tags           = var.use_old_arn ? null : module.ecs_service_label.tags
 
   deployment_controller {
     type = var.deployment_controller_type
