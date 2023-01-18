@@ -16,7 +16,7 @@ module "task_label" {
   version     = "0.25.0"
   enabled     = local.create_task_role
   attributes  = ["task"]
-  label_order = var.label_order_custom.task
+  label_order = var.label_order_custom.iam
 
   context = module.this.context
 }
@@ -35,15 +35,15 @@ module "exec_label" {
   version     = "0.25.0"
   enabled     = local.create_exec_role
   attributes  = ["exec"]
-  label_order = var.label_order_custom.exec
+  label_order = var.label_order_custom.iam
 
   context = module.this.context
 }
 
-module "ecs_service_label" {
+module "ecs_label" {
   source      = "cloudposse/label/null"
   version     = "0.25.0"
-  label_order = var.label_order_custom.ecs_service
+  label_order = var.label_order_custom.ecs
 
   context = module.this.context
 }
@@ -362,7 +362,7 @@ resource "aws_security_group_rule" "nlb" {
 
 resource "aws_ecs_service" "ignore_changes_task_definition" {
   count                              = local.ecs_service_enabled && var.ignore_changes_task_definition && !var.ignore_changes_desired_count ? 1 : 0
-  name                               = module.ecs_service_label.id
+  name                               = module.ecs_label.id
   task_definition                    = coalesce(var.task_definition, "${join("", aws_ecs_task_definition.default[*].family)}:${join("", aws_ecs_task_definition.default[*].revision)}")
   desired_count                      = var.desired_count
   deployment_maximum_percent         = var.deployment_maximum_percent
@@ -424,7 +424,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition" {
 
   cluster        = var.ecs_cluster_arn
   propagate_tags = var.propagate_tags
-  tags           = var.use_old_arn ? null : module.ecs_service_label.tags
+  tags           = var.use_old_arn ? null : module.ecs_label.tags
 
   deployment_controller {
     type = var.deployment_controller_type
@@ -455,7 +455,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition" {
 
 resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
   count                              = local.ecs_service_enabled && var.ignore_changes_task_definition && var.ignore_changes_desired_count ? 1 : 0
-  name                               = module.ecs_service_label.id
+  name                               = module.ecs_label.id
   task_definition                    = coalesce(var.task_definition, "${join("", aws_ecs_task_definition.default[*].family)}:${join("", aws_ecs_task_definition.default[*].revision)}")
   desired_count                      = var.desired_count
   deployment_maximum_percent         = var.deployment_maximum_percent
@@ -517,7 +517,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
 
   cluster        = var.ecs_cluster_arn
   propagate_tags = var.propagate_tags
-  tags           = var.use_old_arn ? null : module.ecs_service_label.tags
+  tags           = var.use_old_arn ? null : module.ecs_label.tags
 
   deployment_controller {
     type = var.deployment_controller_type
@@ -548,7 +548,7 @@ resource "aws_ecs_service" "ignore_changes_task_definition_and_desired_count" {
 
 resource "aws_ecs_service" "ignore_changes_desired_count" {
   count                              = local.ecs_service_enabled && !var.ignore_changes_task_definition && var.ignore_changes_desired_count ? 1 : 0
-  name                               = module.ecs_service_label.id
+  name                               = module.ecs_label.id
   task_definition                    = coalesce(var.task_definition, "${join("", aws_ecs_task_definition.default[*].family)}:${join("", aws_ecs_task_definition.default[*].revision)}")
   desired_count                      = var.desired_count
   deployment_maximum_percent         = var.deployment_maximum_percent
@@ -610,7 +610,7 @@ resource "aws_ecs_service" "ignore_changes_desired_count" {
 
   cluster        = var.ecs_cluster_arn
   propagate_tags = var.propagate_tags
-  tags           = var.use_old_arn ? null : module.ecs_service_label.tags
+  tags           = var.use_old_arn ? null : module.ecs_label.tags
 
   deployment_controller {
     type = var.deployment_controller_type
@@ -641,7 +641,7 @@ resource "aws_ecs_service" "ignore_changes_desired_count" {
 
 resource "aws_ecs_service" "default" {
   count                              = local.ecs_service_enabled && !var.ignore_changes_task_definition && !var.ignore_changes_desired_count ? 1 : 0
-  name                               = module.ecs_service_label.id
+  name                               = module.ecs_label.id
   task_definition                    = coalesce(var.task_definition, "${join("", aws_ecs_task_definition.default[*].family)}:${join("", aws_ecs_task_definition.default[*].revision)}")
   desired_count                      = var.desired_count
   deployment_maximum_percent         = var.deployment_maximum_percent
@@ -703,7 +703,7 @@ resource "aws_ecs_service" "default" {
 
   cluster        = var.ecs_cluster_arn
   propagate_tags = var.propagate_tags
-  tags           = var.use_old_arn ? null : module.ecs_service_label.tags
+  tags           = var.use_old_arn ? null : module.ecs_label.tags
 
   deployment_controller {
     type = var.deployment_controller_type
