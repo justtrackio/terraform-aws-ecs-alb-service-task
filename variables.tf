@@ -462,7 +462,7 @@ variable "ecs_service_enabled" {
   default     = true
 }
 
-variable "label_order_custom" {
+variable "label_orders" {
   type = object({
     iam     = optional(list(string)),
     service = optional(list(string)),

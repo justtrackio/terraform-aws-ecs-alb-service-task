@@ -16,7 +16,7 @@ module "task_label" {
   version     = "0.25.0"
   enabled     = local.create_task_role
   attributes  = ["task"]
-  label_order = var.label_order_custom.iam
+  label_order = var.label_orders.iam
 
   context = module.this.context
 }
@@ -25,7 +25,7 @@ module "service_label" {
   source      = "cloudposse/label/null"
   version     = "0.25.0"
   attributes  = ["service"]
-  label_order = var.label_order_custom.service
+  label_order = var.label_orders.service
 
   context = module.this.context
 }
@@ -35,7 +35,7 @@ module "exec_label" {
   version     = "0.25.0"
   enabled     = local.create_exec_role
   attributes  = ["exec"]
-  label_order = var.label_order_custom.iam
+  label_order = var.label_orders.iam
 
   context = module.this.context
 }
@@ -43,7 +43,7 @@ module "exec_label" {
 module "ecs_label" {
   source      = "cloudposse/label/null"
   version     = "0.25.0"
-  label_order = var.label_order_custom.ecs
+  label_order = var.label_orders.ecs
 
   context = module.this.context
 }
