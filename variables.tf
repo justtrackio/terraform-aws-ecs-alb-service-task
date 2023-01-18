@@ -464,9 +464,9 @@ variable "ecs_service_enabled" {
 
 variable "label_orders" {
   type = object({
-    iam     = optional(list(string)),
-    service = optional(list(string)),
-    ecs     = optional(list(string))
+    ecs = optional(list(string)),
+    iam = optional(list(string)),
+    vpc = optional(list(string))
   })
   default     = {}
   description = "Overrides the `labels_order` for the different labels to modify ID elements appear in the `id`"
