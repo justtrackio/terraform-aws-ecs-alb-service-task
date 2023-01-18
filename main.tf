@@ -48,12 +48,13 @@ module "ecs_label" {
   context = module.this.context
 }
 
-module "sg_label" {
+module "vpc_label" {
   source      = "cloudposse/label/null"
   version     = "0.25.0"
+  attributes  = ["service"]
   label_order = var.label_orders.vpc
 
-  context = module.service_label.context
+  context = module.this.context
 }
 
 resource "aws_ecs_task_definition" "default" {
@@ -315,9 +316,9 @@ resource "aws_iam_role_policy_attachment" "ecs_exec" {
 resource "aws_security_group" "ecs_service" {
   count       = local.create_security_group ? 1 : 0
   vpc_id      = var.vpc_id
-  name        = module.sg_label.id
+  name        = module.vpc_label.id
   description = var.security_group_description
-  tags        = module.sg_label.tags
+  tags        = module.vpc_label.tags
 
   lifecycle {
     create_before_destroy = true
