@@ -79,8 +79,8 @@ module "test_policy" {
 module "ecs_alb_service_task" {
   source                             = "../.."
   alb_security_group                 = module.vpc.vpc_default_security_group_id
-  container_definition_json          = one(module.container_definition.*.json_map_encoded_list)
-  ecs_cluster_arn                    = one(aws_ecs_cluster.default.*.id)
+  container_definition_json          = one(module.container_definition[*].json_map_encoded_list)
+  ecs_cluster_arn                    = one(aws_ecs_cluster.default[*].id)
   launch_type                        = var.ecs_launch_type
   vpc_id                             = module.vpc.vpc_id
   security_group_ids                 = [module.vpc.vpc_default_security_group_id]
