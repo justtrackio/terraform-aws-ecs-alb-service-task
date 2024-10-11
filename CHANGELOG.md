@@ -1,3 +1,10 @@
+## [1.5.0](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/compare/v1.4.0...v1.5.0) (2024-10-11)
+
+
+### Features
+
+* forbid aws provider 5.71.0 ([#9](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/issues/9)) ([cdcab04](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/commit/cdcab04870819fa3ac06f3d0103ef74a3ed5e597))
+
 ## [1.4.0](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/compare/v1.3.0...v1.4.0) (2024-05-13)
 
 
