@@ -1,3 +1,10 @@
+## [1.6.0](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/compare/v1.5.0...v1.6.0) (2025-02-25)
+
+
+### Features
+
+* rebase cloudposse ([#10](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/issues/10)) ([7c9bf6c](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/commit/7c9bf6cfbb6b70470371aa6500f674fc43c369c1))
+
 ## [1.5.0](https://github.com/justtrackio/terraform-aws-ecs-alb-service-task/compare/v1.4.0...v1.5.0) (2024-10-11)
 
 
