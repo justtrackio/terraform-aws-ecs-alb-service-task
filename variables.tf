@@ -12,7 +12,7 @@ variable "ecs_load_balancers" {
   type = list(object({
     container_name   = string
     container_port   = number
-    elb_name         = string
+    elb_name         = optional(string)
     target_group_arn = string
   }))
   description = "A list of load balancer config objects for the ECS service; see [ecs_service#load_balancer](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service#load_balancer) docs"
@@ -276,6 +276,17 @@ variable "deployment_minimum_healthy_percent" {
   default     = 100
 }
 
+variable "availability_zone_rebalancing" {
+  type        = string
+  description = "ECS automatically redistributes tasks within a service across Availability Zones (AZs) to mitigate the risk of impaired application availability due to underlying infrastructure failures and task lifecycle activities. The valid values are `ENABLED` and `DISABLED`."
+  default     = "DISABLED"
+
+  validation {
+    condition     = contains(["ENABLED", "DISABLED"], var.availability_zone_rebalancing)
+    error_message = "The valid values are `ENABLED` and `DISABLED`."
+  }
+}
+
 variable "health_check_grace_period_seconds" {
   type        = number
   description = "Seconds to ignore failing load balancer health checks on newly instantiated tasks to prevent premature shutdown, up to 7200. Only valid for services configured to use load balancers"
@@ -416,8 +427,47 @@ variable "service_registries" {
       `container_name = string`
       `container_port = number`
     EOT
+  default     = []
+}
 
-  default = []
+variable "service_connect_configurations" {
+  type = list(object({
+    enabled   = bool
+    namespace = optional(string, null)
+    log_configuration = optional(object({
+      log_driver = string
+      options    = optional(map(string), null)
+      secret_option = optional(list(object({
+        name       = string
+        value_from = string
+      })), [])
+    }), null)
+    service = optional(list(object({
+      client_alias = list(object({
+        dns_name = string
+        port     = number
+      }))
+      timeout = optional(list(object({
+        idle_timeout_seconds        = optional(number, null)
+        per_request_timeout_seconds = optional(number, null)
+      })), [])
+      tls = optional(list(object({
+        kms_key  = optional(string, null)
+        role_arn = optional(string, null)
+        issuer_cert_authority = object({
+          aws_pca_authority_arn = string
+        })
+      })), [])
+      discovery_name        = optional(string, null)
+      ingress_port_override = optional(number, null)
+      port_name             = string
+    })), [])
+  }))
+  description = <<-EOT
+    The list of Service Connect configurations.
+    See `service_connect_configuration` docs https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service#service_connect_configuration
+    EOT
+  default     = []
 }
 
 variable "permissions_boundary" {
@@ -505,10 +555,64 @@ variable "ecs_service_role_enabled" {
 
 variable "label_orders" {
   type = object({
-    ecs = optional(list(string)),
-    iam = optional(list(string)),
-    vpc = optional(list(string))
+    ecs             = optional(list(string)),
+    iam             = optional(list(string)),
+    service_connect = optional(list(string)),
+    vpc             = optional(list(string))
   })
   default     = {}
   description = "Overrides the `labels_order` for the different labels to modify ID elements appear in the `id`"
+}
+
+variable "ipc_mode" {
+  type        = string
+  description = <<-EOT
+    The IPC resource namespace to be used for the containers in the task.
+    The valid values are `host`, `task`, and `none`. If `host` is specified,
+    then all containers within the tasks that specified the `host` IPC mode on
+    the same container instance share the same IPC resources with the host
+    Amazon EC2 instance. If `task` is specified, all containers within the
+    specified task share the same IPC resources. If `none` is specified, then
+    IPC resources within the containers of a task are private and not shared
+    with other containers in a task or on the container instance. If no value
+    is specified, then the IPC resource namespace sharing depends on the
+    Docker daemon setting on the container instance. For more information, see
+    IPC settings in the Docker documentation."
+    EOT
+  default     = null
+  validation {
+    condition     = var.ipc_mode == null || contains(["host", "task", "none"], coalesce(var.ipc_mode, "null"))
+    error_message = "The ipc_mode value must be one of host, task, or none."
+  }
+}
+
+variable "pid_mode" {
+  type        = string
+  description = <<-EOT
+    The process namespace to use for the containers in the task. The valid
+    values are `host` and `task`. If `host` is specified, then all containers
+    within the tasks that specified the `host` PID mode on the same container
+    instance share the same process namespace with the host Amazon EC2 instanc
+    . If `task` is specified, all containers within the specified task share
+    the same process namespace. If no value is specified, then the process
+    namespace sharing depends on the Docker daemon setting on the container
+    instance. For more information, see PID settings in the Docker documentation.
+    EOT
+  default     = null
+  validation {
+    condition     = var.pid_mode == null || contains(["host", "task"], coalesce(var.pid_mode, "null"))
+    error_message = "The pid_mode value must be one of host or task."
+  }
+}
+
+variable "track_latest" {
+  type        = bool
+  description = "Whether should track latest task definition or the one created with the resource."
+  default     = false
+}
+
+variable "enable_fault_injection" {
+  type        = bool
+  description = "Enables fault injection and allows for fault injection requests to be accepted from the task's containers"
+  default     = false
 }
